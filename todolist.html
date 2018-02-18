@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+<form id="form" onsubmit="submitTask(); return false;">
+  Task: <input type="text" id="task"><br>
+</form>
+
+<button onclick="submitTask()">Submit</button>
+
+<p id="result"></p>
+
+<script>
+
+	function submitTask() {
+
+		document.getElementById("result").innerHTML = "testing";
+
+		var task = document.getElementById("task").value;
+
+		if (!task.trim()) {
+			document.getElementById("result").innerHTML = "Task field cannot be blank.";
+		} else {
+			document.getElementById("result").innerHTML = task;
+			xmlhttp.open("GET", "taskTracker.php?q=" + str, true);
+        	xmlhttp.send();
+		}
+	}
+
+</script>
+
+</html>
+</body>
