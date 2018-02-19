@@ -1,33 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+ul li.checked {
+  text-decoration: line-through;
+}
+
+.button {
+  padding: 10px;
+  width: 10px;
+  background: #d9d9d9;
+  color: #555;
+  text-align: center;
+  font-size: 16px;
+  transition: 0.3s;
+}
+</style>
 </head>
 <body>
 
-<form id="form" onsubmit="submitTask(); return false;">
-  Task: <input type="text" id="task"><br>
-</form>
+<div id="addTaskDiv">
+  <h2 style="margin:5px">Add a Task</h2>
+  <input type="text" id="myInput" placeholder="Please enter a task">
+  <span onclick="submitTask()" class="button">Add</span>
+</div>
 
-<button onclick="submitTask()">Submit</button>
+<div id="dashboard">
+	<h2 style="margin:5px">To Do List</h2>
+	Total tasks: <i id="numberOfTasksDisplay"></i><br>
+	Number of tasks complete: <i id="numberOfCompletedTasksDisplay"></i><br>
+	Number of tasks incomplete: <i id="numberOfIncompleteTasksDisplay"></i><br>
+</div>
 
-<p id="result"></p>
+
+<ul id="myUL">
+</ul>
 
 <script>
 
-	function submitTask() {
+var numberOfTasks = 0;
+var numberOfCompletedTasks = 0;
+var numberOfIncompleteTasks = 0;
 
-		document.getElementById("result").innerHTML = "testing";
+document.getElementById("numberOfTasksDisplay").innerHTML = numberOfTasks;
+document.getElementById("numberOfCompletedTasksDisplay").innerHTML = numberOfCompletedTasks;
+document.getElementById("numberOfIncompleteTasksDisplay").innerHTML = numberOfIncompleteTasks;
 
-		var task = document.getElementById("task").value;
+// Add a "checked" symbol when clicking on a list item
+var list = document.querySelector('ul');
+list.addEventListener('click', function(ev) {
+  if (ev.target.tagName === 'LI') {
+    ev.target.classList.toggle('checked');
+    numberOfCompletedTasks++;
+    numberOfIncompleteTasks--;
+    document.getElementById("numberOfCompletedTasksDisplay").innerHTML = numberOfCompletedTasks;
+	document.getElementById("numberOfIncompleteTasksDisplay").innerHTML = numberOfIncompleteTasks;
+  }
+}, false);
 
-		if (!task.trim()) {
-			document.getElementById("result").innerHTML = "Task field cannot be blank.";
-		} else {
-			document.getElementById("result").innerHTML = task;
-			xmlhttp.open("GET", "taskTracker.php?q=" + str, true);
-        	xmlhttp.send();
-		}
-	}
+function submitTask() {
+
+  var xmlhttp = new XMLHttpRequest();
+
+  var li = document.createElement("li");
+  var inputValue = document.getElementById("myInput").value;
+  var t = document.createTextNode(inputValue);
+  li.appendChild(t);
+  if (inputValue === '') {
+    alert("Task cannot be blank.");
+  } else {
+    document.getElementById("myUL").appendChild(li);
+    numberOfTasks++;
+    numberOfIncompleteTasks++;
+	document.getElementById("numberOfTasksDisplay").innerHTML = numberOfTasks;
+	document.getElementById("numberOfIncompleteTasksDisplay").innerHTML = numberOfIncompleteTasks;
+    xmlhttp.open("GET", "taskTracker.php?q=" + inputValue, true);
+    xmlhttp.send();
+  }
+  document.getElementById("myInput").value = "";
+
+  var span = document.createElement("SPAN");
+  var txt = document.createTextNode("\u00D7");
+}
 
 </script>
 
